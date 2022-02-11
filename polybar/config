@@ -1,0 +1,128 @@
+[colors]
+background = #00000000
+foreground = #ffc5ced9
+
+background-fill = #ff181d26
+foreground-dim = #ff7c8393
+alert = #e58c9e
+
+
+[bar/top]
+bottom = false
+width = 100%
+height = 24
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 2
+line-color = #000
+
+border-size = 16
+;border-left = 16
+;border-right = 16
+border-color = #00000000
+ 
+
+module-margin = 1
+
+font-0 = SauceCodePro Nerd Font Mono:style=bold:pixelsize=12;3
+font-1 = SauceCodePro Nerd Font Mono:stype=bold:pixelsize=15;4
+;;font-2 = FontAwesome:pixelsize=15;4
+
+
+modules-left = date workspace-switcher window-controls
+modules-center = 
+modules-right = mpd pulseaudio cpu-usage battery-indicator
+
+wm-restack = bspwm
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+
+;         ;
+; MODULES ;
+;         ;
+
+[module/workspace-switcher]
+type = internal/bspwm
+
+label-focused = %name%
+label-focused-background = ${colors.foreground}
+label-focused-foreground = ${colors.background-fill}
+label-focused-padding = 1
+
+label-occupied = %name%
+label-occupied-background = ${colors.background-fill}
+label-occupied-padding = 1
+
+label-urgent = %name%!
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 1
+
+label-empty = %name%
+label-empty-background = ${colors.background-fill}
+label-empty-foreground = ${colors.foreground-dim}
+label-empty-padding = 1
+
+
+[module/mpd]
+type = internal/mpd
+interval = 1
+
+label-song = "%{B#c5ced9}%{F#181d26} %artist:0:10:...% %{B#181d26}%{F#c5ced9}%{T2}%{T-} %title:0:30:...% %{T2}%{T-}%{B#c5ced9}%{F#181d26}"
+label-time = %elapsed%
+format-online = "<label-song> <label-time> "
+
+[module/cpu-usage]
+type = internal/cpu
+interval = 2
+
+label = "%{B#c5ced9}%{F#181d26} C %{B#181d26}%{F#c5ced9}%{T2}%{T-} %percentage:2:2% "
+
+[module/notifications]
+type = custom/script
+exec = echo "%{b#c5ced9}%{f#181d26} N %{b#181d26}%{f#c5ced9}%{t2}%{t-} $(dunstctl count history) "
+interval = 128
+
+[module/date]
+type = internal/date
+interval = 1
+
+date = "%m/%d/%Y"
+time = %r
+
+format-prefix-foreground = ${colors.foreground-alt}
+label = "%{B#c5ced9}%{F#181d26} %date% %{B#181d26}%{F#c5ced9}%{T2}%{T-} %time% "
+
+
+[module/window-controls]
+type = internal/xwindow
+label = "%{B#c5ced9}%{F#181d26} %{A:bspc node -d prev --follow:}<%{A} %{A:bspc node -c:}X%{A} %{A:bspc node -d next --follow:}> %{A}%{B#181d26}%{F#c5ced9}%{T2}%{T-} %title:0:30:...% "
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+label-volume = "%{B#c5ced9}%{F#181d26} V %{B#181d26}%{F#c5ced9}%{T2}%{T-} %percentage:2:3% " 
+label-muted = "%{B#c5ced9}%{F#181d26} V %{B#181d26}%{F#c5ced9}%{T2}%{T-} mu "
+
+[module/battery-indicator]
+type = internal/battery
+battery = BAT0
+adapter = AC
+full-at = 98
+
+format-charging = <label-charging>
+format-discharging = <label-discharging>
+
+label-charging = "%{B#c5ced9}%{F#181d26} B %{B#181d26}%{F#c5ced9}%{T2}%{T-} %percentage:2%+ "
+label-discharging = "%{B#c5ced9}%{F#181d26} B %{B#181d26}%{F#c5ced9}%{T2}%{T-} %percentage:2%- "
+
+label-full = "%{B#c5ced9}%{F#181d26} B %{B#181d26}%{F#c5ced9}%{T2}%{T-} 100 "
+
+
+[settings]
+screenchange-reload = true
+
+

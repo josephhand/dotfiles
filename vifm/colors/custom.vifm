@@ -1,0 +1,31 @@
+
+hi clear
+
+
+
+" Window
+hi Win 		cterm=none	ctermfg=default	ctermbg=-1
+hi Border	cterm=none	ctermfg=default	ctermbg=-1
+
+hi TopLineSel	cterm=bold	ctermfg=0	ctermbg=15
+hi TopLine	cterm=bold	ctermfg=15	ctermbg=0
+
+hi StatusLine	cterm=bold	ctermfg=4	ctermbg=-1
+hi CmdLine	cterm=none	ctermfg=15	ctermbg=-1
+
+
+
+" Selection
+
+hi CurrLine	cterm=bold	ctermbg=0	
+hi OtherLine	cterm=bold	ctermbg=0
+hi Selected	cterm=bold	ctermbg=8
+
+
+
+" Contents
+hi Directory	cterm=none	ctermfg=4	ctermbg=-1
+hi Link		ctermfg=2
+hi BrokenLink	ctermfg=1
+hi Executable	cterm=none	ctermfg=3
+

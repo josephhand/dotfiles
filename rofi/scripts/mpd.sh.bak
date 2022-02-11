@@ -1,0 +1,65 @@
+#!/bin/bash
+
+echo -e "\0markup-rows\x1ftrue"
+
+if [[ ${#current_song} -gt 0 ]]; then
+	echo -e "\0message\x1fnow playing: $(mpc -f '%title% by %artist%' current)"
+fi
+
+IFS='*' read -r -a INFO <<< "$ROFI_INFO"
+
+for i in ${!INFO[@]}
+do
+	if [[ $i -gt 2 ]]; then
+		eval ${INFO[$i]} > /dev/null
+	fi
+done
+
+CURRENT_SONG=$(mpc -f '%title% by %artist%' current)
+
+if [[ ${#CURRENT_SONG} -gt 0 ]]; then
+	echo -e "\0message\x1fNow Playing: $(mpc -f '%title% by %artist%' current)"
+else
+	echo -e "\0message\x1f"
+fi
+
+case "${INFO[0]}" in
+	"" | "main")
+		echo -e "Play/Pause\0info\x1fmain***mpc toggle"
+		echo -e "Prev\0info\x1fmain***mpc cdprev"
+		echo -e "Next\0info\x1fmain***mpc next"
+		echo -e "Clear Queue\0info\x1fmain***mpc clear"
+		echo -e "Adv. Controls\0info\x1fadvcon"
+		echo -e "Navigate\0info\x1fnavigate_all"
+		echo -e "Song List\0info\x1fallsongs"
+		;;
+	"advcon")
+		echo -e "..\0info\x1fmain"
+		echo -e "TODO add options\0nonselectable\x1ftrue"
+		;;
+	"navigate_all")
+		echo -e "\0message\x1fSongs In: /"
+		echo -e "..\0info\x1fmain"
+		echo -e "<b>Play All</b>\0info\x1fnavigate_all***mpc add /*mpc play"
+		mpc list artist |\
+		       	awk '{printf "%s\0info\x1fnavigate_artist*%s\n", $0, $0}'
+		;;
+	"navigate_artist")
+		echo -e "\0message\x1fSongs In: /${INFO[1]}/"
+		echo -e "..\0info\x1fnavigate_all"
+		echo -e "<b>Play All</b>\0info\x1fnavigate_artist*${INFO[1]}**mpc findadd artist '${INFO[1]}'*mpc play"
+		mpc list album artist "${INFO[1]}" |\
+			awk -v a="${INFO[1]}" '{printf "%s\0info\x1fnavigate_album*%s*%s\n", $0, a, $0}'
+		;;
+	"navigate_album")
+		echo -e "\0message\x1fSongs In: /${INFO[1]}/${INFO[2]}/"
+		echo -e "..\0info\x1fnavigate_artist*${INFO[1]}"
+		echo -e "<b>Play All</b>\0info\x1fnavigate_album*${INFO[1]}*${INFO[2]}*mpc findadd artist '${INFO[1]}' album '${INFO[2]}'*mpc play"
+		mpc -f "%title%*%file%" find artist "${INFO[1]}" album "${INFO[2]}" |\
+			awk -F"*" -v artist="${INFO[1]}" -v album="${INFO[2]}" '{printf "%s\0info\x1fnavigate_album*%s*%s*mpc add \"%s\"*mpc play\n", $1, artist, album, $2}'
+		;;
+	"allsongs")
+		echo -e "..\0info\x1fmain"
+		mpc -f "%title%*%artist%*%file%" listall |\
+			awk -F"*" '{printf "%s by %s\0info\x1fallsongs***mpc add \"%s\"*mpc play\n", $1, $2, $3}'
+esac

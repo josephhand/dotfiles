@@ -1,0 +1,178 @@
+
+
+### POWER MANAGEMENT ###
+
+# Poweroff
+super + ctrl + alt + p; p
+	systemctl poweroff
+
+# Hibernate
+super + ctrl + alt + h; h
+	systemctl hibernate
+
+# Suspend
+super + ctrl + alt + s
+	systemctl suspend
+
+# Lock Computer
+super + ctrl + alt + l
+	~/.config/lock/i3lock-color.sh
+
+### WM FUNCTIONS ###
+
+# Restart/Quit BSPWM
+super + ctrl + alt + {_,shift + }BackSpace
+	bspc {wm -r,quit}
+
+# Reload SXHKD
+super + ctrl + alt + Return
+	pkill -USR1 -x sxhkd
+
+# Toggle Trackpad
+super + ctrl + alt + space
+	~/.scripts/trackpad-toggle.sh
+
+### APP LAUNCHERS ###
+
+# Rofi
+super + alt + @space
+	rofi -show run
+
+## xlunch
+#super + alt + shift + @space
+#	xlunch --config ~/.config/xlunch/launch
+
+# Alacritty
+super + alt + Return
+	alacritty 
+
+# Firefox
+super + alt + f
+	firefox
+
+# ViFM
+super + alt + v
+	alacritty --title=ViFM -e vifm
+
+# Vim
+super + alt + shift + v
+	alacritty --title=Vim -e vim
+
+# Bluetooth
+super + alt + b
+	rofi -show bluetooth -modi "bluetooth:.config/rofi/scripts/bluetooth.sh"
+
+# Wifi
+super + alt + n
+	rofi -show network -modi "network:.config/rofi/scripts/wifi.sh"
+
+# Weather
+super + alt + w
+	alacritty --hold --title=wttr.in --option font.size=8 -e curl -fs "wttr.in"
+
+# mpd-rofi
+super + alt + m
+	rofi -show music -modi "music:.config/rofi/scripts/mpd.sh"
+
+# VIMPC
+super + alt + shift + m
+	alacritty --title=VIMPC -e vimpc
+
+# GLava
+# super + alt + shift + m
+# 	glava
+
+# Qalculate
+super + alt + c
+	alacritty -e qalc
+
+# Calcurse
+# super + alt + shift + c
+# 	alacritty --title=CalCurse -e calcurse
+
+# Newsboat
+# super + alt + n
+# 	alacritty --title=Newsboat -e newsboat -r
+
+### MUSIC & VOLUME CONTROLS ###
+
+# Play/Pause
+{XF86AudioPlay,ctrl + super + space}
+	mpc toggle
+XF86AudioPause
+	mpc pause
+
+# Previous
+{XF86AudioPrev,ctrl + super + Left}
+	mpc cdprev
+
+# Next
+{XF86AudioNext,ctrl + super + Right}
+	mpc next
+
+# Sweep Back
+ctrl + super + shift + Left
+	mpc seekthrough -5
+
+# Sweep Forward
+ctrl + super + shift + Right
+	mpc seekthrough +5
+
+# Toggle Mute
+{XF86AudioMute,ctrl + super + Return}
+	pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# Volume Down
+{XF86AudioLowerVolume,ctrl + super + Down}
+	pactl set-sink-volume @DEFAULT_SINK@ -1%
+
+# Volume Up
+{XF86AudioRaiseVolume,ctrl + super + Up}
+	pactl set-sink-volume @DEFAULT_SINK@ +1%
+
+### SCREEN BRIGHTNESS ###
+
+# Decrease Brightness
+{XF86MonBrightnessDown,super + F6}
+	lumeus -10%
+
+# Increase Brightness
+{XF86MonBrightnessUp,super + F7}
+	lumeus +10%
+
+### WINDOW CONTROLS ###
+
+# Close/Kill Window
+super + {_,shift + }BackSpace
+	bspc node -{c,k}
+
+# Toggle Fullscreen
+super + Return
+	bspc node -t ~fullscreen
+
+# Toggle Monocle View
+super + shift + Return
+	bspc desktop -l next
+
+# Change Focused Window
+super + {Up,Down,Left,Right}
+	bspc node --focus {north,south,west,east}
+
+# Move Window
+super + shift + {Up,Down,Left,Right}
+	bspc node --swap {north,south,west,east}
+
+# Change Workspace
+super + {1-5}
+	bspc desktop --focus ^{1-5}
+
+# Move Window to New Workspace
+super + shift + {1-5}
+	bspc node --to-desktop ^{1-5} --follow
+
+### MISC CONTROLS ###
+
+# Screenshot
+super + F10
+	scrot ~/Pictures/screenshots/%Y-%m-%d_%T.jpg
+

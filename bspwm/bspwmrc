@@ -1,0 +1,45 @@
+#! /bin/sh
+
+killall sxhkd
+killall picom
+killall polybar
+killall nm-applet
+killall cellwriter
+killall feh
+killall mpd
+killall glava
+killall dunst
+
+sxhkd &
+xss-lock -l ~/.config/lock/transfer-sleep-lock-generic-delay.sh &
+picom -b --experimental-backends --backend glx &
+feh --bg-fill .config/wallpapers/exoplanet2.jpg &
+mpd &
+(
+    polybar -q top &
+)
+
+bspc monitor -d A B C D E
+
+WIN_GAP=16
+
+bspc config border_width        1
+bspc config window_gap          ${WIN_GAP}
+
+bspc config top_padding		-${WIN_GAP}
+bspc config bottom_padding	0
+bspc config left_padding	0
+bspc config right_padding	0
+
+bspc config normal_border_color 	"#7C8393"
+bspc config active_border_color 	"#C5CED9"
+bspc config focused_border_color 	"#C5CED9"
+
+
+bspc config automatic_scheme	alternate
+
+
+bspc config split_ratio          0.55
+bspc config borderless_monocle   false
+bspc config gapless_monocle      false
+
