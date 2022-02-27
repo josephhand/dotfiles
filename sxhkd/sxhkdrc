@@ -46,9 +46,13 @@ super + alt + @space
 super + alt + Return
 	alacritty 
 
-# Firefox
+# LibreWolf
 super + alt + f
-	firefox
+	librewolf
+
+# Tor Browser
+super + alt + shift + f
+	torbrowser-launcher
 
 # ViFM
 super + alt + v
@@ -98,17 +102,31 @@ super + alt + c
 
 # Play/Pause
 {XF86AudioPlay,ctrl + super + space}
-	mpc toggle
+	playerctl play-pause
+
+{shift + XF86AudioPlay,ctrl + shift + super + space}
+	playerctl play-pause -p $(playerctl -l | rofi -dmenu -p play-pause)
+
 XF86AudioPause
-	mpc pause
+	playerctl pause
+
+shift + XF86AudioPause
+	playerctl pause -p $(playerctl -l | rofi -dmenu -p pause)
+	
 
 # Previous
 {XF86AudioPrev,ctrl + super + Left}
-	mpc cdprev
+	playerctl previous
+
+{shift + XF86AudioPrev,ctrl + shift + super + Left}
+	playerctl previous -p $(playerctl -l | rofi -dmenu -p pause)
 
 # Next
 {XF86AudioNext,ctrl + super + Right}
-	mpc next
+	playerctl next
+
+{shift + XF86AudioNext,ctrl + shift + super + Right}
+	playerctl next -p $(playerctl -l | rofi -dmenu -p pause)
 
 # Sweep Back
 ctrl + super + shift + Left
@@ -146,6 +164,14 @@ ctrl + super + shift + Right
 super + {_,shift + }BackSpace
 	bspc node -{c,k}
 
+# Toggle Floating
+super + Tab
+	bspc node -t ~floating
+
+# Toggle Pseudo-Tiled
+super + shift + Tab
+	bspc node -t ~pseudo_tiled
+
 # Toggle Fullscreen
 super + Return
 	bspc node -t ~fullscreen
@@ -157,6 +183,10 @@ super + shift + Return
 # Change Focused Window
 super + {Up,Down,Left,Right}
 	bspc node --focus {north,south,west,east}
+
+# Preselect New Window
+super + alt + {Up,Down,Left,Right}
+	bspc node --presel-dir ~{north,south,west,east}
 
 # Move Window
 super + shift + {Up,Down,Left,Right}

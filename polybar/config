@@ -40,6 +40,39 @@ wm-restack = bspwm
 cursor-click = pointer
 cursor-scroll = ns-resize
 
+[bar/top-lite]
+bottom = false
+width = 100%
+height = 24
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 2
+line-color = #000
+
+border-size = 16
+;border-left = 16
+;border-right = 16
+border-color = #00000000
+ 
+
+module-margin = 1
+
+font-0 = SauceCodePro Nerd Font Mono:style=bold:pixelsize=12;3
+font-1 = SauceCodePro Nerd Font Mono:stype=bold:pixelsize=15;4
+;;font-2 = FontAwesome:pixelsize=15;4
+
+
+modules-left = date workspace-switcher
+modules-center = 
+modules-right = cpu-usage battery-indicator
+
+wm-restack = bspwm
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
 
 ;         ;
 ; MODULES ;
@@ -48,20 +81,21 @@ cursor-scroll = ns-resize
 [module/workspace-switcher]
 type = internal/bspwm
 
-label-focused = %name%
+label-focused = ●
 label-focused-background = ${colors.foreground}
 label-focused-foreground = ${colors.background-fill}
 label-focused-padding = 1
 
-label-occupied = %name%
+label-occupied = ●
 label-occupied-background = ${colors.background-fill}
+label-occupied-foreground = ${colors.foreground-dim}
 label-occupied-padding = 1
 
-label-urgent = %name%!
+label-urgent = ●
 label-urgent-background = ${colors.alert}
 label-urgent-padding = 1
 
-label-empty = %name%
+label-empty = ○
 label-empty-background = ${colors.background-fill}
 label-empty-foreground = ${colors.foreground-dim}
 label-empty-padding = 1
@@ -74,6 +108,16 @@ interval = 1
 label-song = "%{B#c5ced9}%{F#181d26} %artist:0:10:...% %{B#181d26}%{F#c5ced9}%{T2}%{T-} %title:0:30:...% %{T2}%{T-}%{B#c5ced9}%{F#181d26}"
 label-time = %elapsed%
 format-online = "<label-song> <label-time> "
+
+[module/network]
+type = internal/network
+interface = wlp2s0
+interval = 5
+
+label-connected = %essid% %downspeed%
+
+format-connected = "%{B#c5ced9}%{F#181d26} N %{B#181d26}%{F#c5ced9}%{T2}%{T-} <label-connected> "
+format-disconnected = ""
 
 [module/cpu-usage]
 type = internal/cpu

@@ -1,25 +1,33 @@
 #! /bin/sh
 
 killall sxhkd
+killall xss-lock
 killall picom
-killall polybar
-killall nm-applet
-killall cellwriter
 killall feh
 killall mpd
-killall glava
+
+killall mpd-mpris
+killall mpd-notification
+killall polybar
 killall dunst
+
+[[ -f ~/.Xresources ]] && xrdb ~/.Xresources
 
 sxhkd &
 xss-lock -l ~/.config/lock/transfer-sleep-lock-generic-delay.sh &
 picom -b --experimental-backends --backend glx &
 feh --bg-fill .config/wallpapers/exoplanet2.jpg &
 mpd &
-(
-    polybar -q top &
-)
+{
+	sleep 1
+	mpd-mpris &
+	mpd-notification
+} &
+polybar -q top &
+dunst &
 
 bspc monitor -d A B C D E
+
 
 WIN_GAP=16
 
@@ -34,12 +42,19 @@ bspc config right_padding	0
 bspc config normal_border_color 	"#7C8393"
 bspc config active_border_color 	"#C5CED9"
 bspc config focused_border_color 	"#C5CED9"
+bspc config presel_feedback_color	"#181D26"
 
-
-bspc config automatic_scheme	alternate
-
-
-bspc config split_ratio          0.55
+bspc config split_ratio          0.5
 bspc config borderless_monocle   false
 bspc config gapless_monocle      false
 
+
+
+bspc config pointer_modifier mod4 
+bspc config pointer_action1 move
+bspc config pointer_action2 none
+bspc config pointer_action3 resize_corner
+
+
+
+bspc rule -a Covr state=pseudo_tiled

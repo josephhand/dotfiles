@@ -8,7 +8,7 @@
     red:                         rgba ( 229, 140, 158, 100 % );
     blue:                        rgba ( 140, 214, 229, 100 % );
     
-    background:                  rgba ( 0, 0, 0, 0% );
+    background:                  rgba ( 0, 0, 0, 0 );
     foreground:                  rgba ( 197, 206, 217, 100 % );
     background-solid:		 rgba ( 13, 13, 13, 100% );
     background-translucent:	 rgba ( 13, 13, 13, 60% );
@@ -98,11 +98,11 @@ element-icon {
 }
 window {
     padding:          8;
-    background-color: var(background);
+    background-color: var(background-translucent);
     border:           1;
 	
-    width: 35%;
-    height: 35%;
+    width: 60%;
+    height: 30%;
 
     font: "SauceCodePro Nerd Font Mono 13";
 }

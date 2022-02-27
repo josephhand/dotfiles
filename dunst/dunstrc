@@ -24,7 +24,7 @@
     # dynamic width from 0 to 300
     # width = (0, 300)
     # constant width of 300
-    width = (0, 300)
+    width = (0, 1000)
 
     # The maximum height of a single notification, excluding the frame.
     height = 
@@ -33,7 +33,7 @@
     origin = top-right
 
     # Offset from the origin
-    offset = 10x50
+    offset = 8x48
 
     # Scale factor. It is auto-detected if value is 0.
     scale = 0
@@ -86,7 +86,7 @@
 
     # Defines width in pixels of frame around the notification window.
     # Set to 0 to disable.
-    frame_width = 2
+    frame_width = 1
 
     # Defines color of the frame around the notification window.
     frame_color = "#c5ced9"
@@ -151,7 +151,7 @@
     #   %n  progress value if set without any extra characters
     #   %%  Literal %
     # Markup is allowed
-    format = "<b>%a: %s</b>\n\n%b"
+    format = "<b>%s</b>\n\n%b"
 
     # Alignment of message text.
     # Possible values are "left", "center" and "right".
@@ -193,7 +193,7 @@
     min_icon_size = 0
 
     # Scale larger icons down to this size, set to 0 to disable
-    max_icon_size = 32
+    max_icon_size = 0
 
     # Paths to default icons.
     icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/

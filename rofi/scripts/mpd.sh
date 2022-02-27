@@ -2,7 +2,9 @@
 
 # Constants
 
+
 IFS="*"
+PLAYLIST_DIR=".config/mpd/playlists/"
 
 # Functions
 
@@ -26,6 +28,19 @@ query ()
 	echo -e "\0prompt\x1f$1"
 	echo -e "\0no-custom\x1ffalse"
 	echo -e "\0custom-info\x1f$(shift 1; echo "$*")"
+}
+
+
+playsongs ()
+{
+	mpc clear
+	mpc searchadd artist "$1" album "$2" title "$3"
+	
+	if [[ $4 == TRUE ]]; then
+		mpc shuffle
+	fi
+	
+	mpc play
 }
 
 # Main
@@ -55,9 +70,10 @@ case ${INFO[0]} in
 		item "Next" 		main 	"mpc next"
 		item "Previous" 	main 	"mpc cdprev"
 		item "Manage Queue" 	queue
-		item "Library"		library
+		item "Library"		artist_list
+		item "Playlists"	playlists
 		item "Options"		options
-		item "cmd"		cmd
+		item "Command"		cmd
 		;;
 	"queue")
 		item ".."		main
@@ -76,30 +92,75 @@ case ${INFO[0]} in
 		item ".."			queue
 		item "Remove From Queue"	queue	"mpc del ${INFO[5]}"
 		item "Play Now"			queue	"mpc move ${INFO[5]} 1"
+		item "View In Library"		queue_song 	
 		;;
-	"library")
-		item ".."		main
-		item "Artists"		lib_artists
-		item "Albums"		lib_albums
-		item "Songs"		lib_songs
-		item "Playlists"	playls
+	"artist_list")
+		message "> /"
+		item ".."	main
+		item "*"	album_list	""
+		mpc list artist	|\
+			awk -v d="$IFS" '{printf "%s\0info\x1falbum_list%s%s%s\n", $0, d, d, $0}'
 		;;
-	"lib_artists")
-		item ".."		library
-		mpc list artist |\
-			awk -v ifs="$IFS" '{ printf "%s\0info\x1flib_artist_albums%s%s%s\n", $0, ifs, ifs, $0 }'
+	"album_list") # artist
+		ARTIST="*"
+		if [[ ${INFO[2]} != "" ]]; then
+			ARTIST=${INFO[2]}
+		fi
+		message "> /$ARTIST/"
+		item ".."	artist_list
+		item "*"	song_list	""	"${INFO[2]}"
+		if [[ ${INFO[2]} == "" ]]; then
+			mpc list album |\
+				awk -v a=${INFO[2]} -v d="$IFS" '{ printf "%s\0info\x1fsong_list%s%s%s%s%s\n", $0, d, d, a, d, $0 }'
+		else
+			mpc list album artist "${INFO[2]}" |\
+				awk -v a=${INFO[2]} -v d="$IFS" '{ printf "%s\0info\x1fsong_list%s%s%s%s%s\n", $0, d, d, a, d, $0 }'
+		fi
 		;;
-	"lib_artist_albums")
-		item ".."		lib_artists
-		mpc list album artist "${INFO[2]}" |\
-			awk -v ifs="$IFS" artist="${INFO[2]}" '{ printf "%s\0info\x1flib_artist_album_songs%s%s%s%s%s", $0, ifs, ifs, artist, ifs, $0 }'
+	"song_list")
+		ARTIST="*"
+		if [[ ${INFO[2]} != "" ]]; then
+			ARTIST=${INFO[2]}
+		fi
+		ALBUM="*"
+		if [[ ${INFO[3]} != "" ]]; then
+			ALBUM=${INFO[3]}
+		fi
+		message "> /$ARTIST/$ALBUM/"
+		item ".."	album_list	"" 	"${INFO[2]}"
+		item "*"	song_actions	""	"${INFO[2]}" "${INFO[3]}"
+		mpc -f "%artist% - %title%\\song_actions${IFS}${IFS}%artist%${IFS}%album%${IFS}%title%" search artist "${INFO[2]}" album "${INFO[3]}" |\
+			awk -F\\ -v d="$IFS" '{ printf "%s\0info\x1f%s\n", $1, $2 }'
 		;;
-	"lib_artist_album_songs")
-		item ".."		lib_artist_albums	""	"${INFO[2]}"
-		mpc find artist "${INFO[2]}" album "${INFO[3]}" |
-	"lib_song")
-		message "Song: ${INFO[2]} - ${INFO[4]}"
-		item ".."		${INFO[2]}	
+	"song_actions")
+		ARTIST="*"
+		if [[ ${INFO[2]} != "" ]]; then
+			ARTIST=${INFO[2]}
+		fi
+		ALBUM="*"
+		if [[ ${INFO[3]} != "" ]]; then
+			ALBUM=${INFO[3]}
+		fi
+		TITLE="*"
+		if [[ ${INFO[4]} != "" ]]; then
+			TITLE=${INFO[4]}
+		fi
+		message "> /$ARTIST/$ALBUM/$TITLE ($(mpc search artist "${INFO[2]}" album "${INFO[3]}" title "${INFO[4]}" | grep -c "^") songs)"
+		item ".."		song_list	""	"${INFO[2]}" "${INFO[3]}"
+		item "Play"		song_actions	"playsongs \"${INFO[2]}\" \"${INFO[3]}\" \"${INFO[4]}\""		${INFO[2]} ${INFO[3]} ${INFO[4]}
+		item "Shuffle"		song_actions	"playsongs \"${INFO[2]}\" \"${INFO[3]}\" \"${INFO[4]}\" TRUE"		${INFO[2]} ${INFO[3]} ${INFO[4]}	
+		item "Append to Queue"	song_actions	"mpc searchadd artist \"${INFO[2]}\" album \"${INFO[3]}\" title \"${INFO[4]}\""	${INFO[2]} ${INFO[3]} ${INFO[4]}
+		item "Append to Playlist"	song_actions	""
+		;;
+	"playlists")
+		item ".."	main
+		mpc lsplaylists |\
+			awk -v d="$IFS" '{printf "%s\0info\x1fplaylist_songs%s%s%s", $0, d, d, $0}'
+		;;
+	"playlist_songs")
+		item ".."	playlists
+		mpc playlist "${INFO[2]}"
+		;;
 	"options")
 		item ".."		main
 		
@@ -128,6 +189,7 @@ case ${INFO[0]} in
 		else
 			item "Repeat: Off"	options "mpc repeat on"
 		fi
+		item "Update Database"		options	"mpc rescan --wait"
 		;;
 	"crossfade")
 		CROSSFADE="$(mpc crossfade | awk '{print $2}')"
@@ -145,5 +207,11 @@ case ${INFO[0]} in
 	"cmd_out")
 		item "Done"		main
 		echo -e "Command Output:\n$(eval $1)" | awk '{print $0, "\0nonselectable\x1ftrue"}'
+		;;
+	"*")
+		message "ERROR: Unknown menu \"${INFO[0]}\""
+		item "Main Menu"	menu
+		echo "Debug:"
+		echo $ROFI_INFO
 		;;
 esac

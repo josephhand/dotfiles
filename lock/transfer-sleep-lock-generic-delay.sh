@@ -17,7 +17,7 @@ sleep_delay=2
 
 # Run before starting the locker
 pre_lock() {
-    mpc pause
+#    mpc pause
     return
 }
 
