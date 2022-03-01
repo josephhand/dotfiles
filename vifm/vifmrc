@@ -142,6 +142,7 @@ command! reload :write | restart full
 command openwith %a %c &
 command shred shred -u %c &
 command emptytrash rm -r ~/.local/share/vifm/Trash/*
+command symlink ln -s -T %d/%c %D/%c
 
 " ------------------------------------------------------------------------------
 

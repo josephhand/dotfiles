@@ -57,4 +57,4 @@ bspc config pointer_action3 resize_corner
 
 
 
-bspc rule -a Covr state=pseudo_tiled
+bspc rule -a Covr state=floating
