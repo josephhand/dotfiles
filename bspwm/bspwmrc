@@ -8,6 +8,7 @@ killall mpd
 
 killall mpd-mpris
 killall mpd-notification
+killall mpd_discord_richpresence
 killall polybar
 killall dunst
 
@@ -21,7 +22,8 @@ mpd &
 {
 	sleep 1
 	mpd-mpris &
-	mpd-notification
+	mpd-notification &
+	aur-git/mpd-rich-presence-discord/release/mpd_discord_richpresence
 } &
 polybar -q top &
 dunst &
@@ -58,3 +60,4 @@ bspc config pointer_action3 resize_corner
 
 
 bspc rule -a Covr state=floating
+bspc rule -a XKCD state=floating
