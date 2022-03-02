@@ -19,17 +19,12 @@ line-size = 2
 line-color = #000
 
 border-size = 16
-;border-left = 16
-;border-right = 16
-border-color = #00000000
- 
+border-color = ${colors.background}
 
 module-margin = 1
 
 font-0 = SauceCodePro Nerd Font Mono:style=bold:pixelsize=12;3
 font-1 = SauceCodePro Nerd Font Mono:stype=bold:pixelsize=15;4
-;;font-2 = FontAwesome:pixelsize=15;4
-
 
 modules-left = date workspace-switcher window-controls
 modules-center = 
@@ -40,8 +35,8 @@ wm-restack = bspwm
 cursor-click = pointer
 cursor-scroll = ns-resize
 
-[bar/top-lite]
-bottom = false
+[bar/bottom]
+bottom = true
 width = 100%
 height = 24
 
@@ -52,27 +47,23 @@ line-size = 2
 line-color = #000
 
 border-size = 16
-;border-left = 16
-;border-right = 16
-border-color = #00000000
+border-color = ${colors.background}
  
-
-module-margin = 1
 
 font-0 = SauceCodePro Nerd Font Mono:style=bold:pixelsize=12;3
 font-1 = SauceCodePro Nerd Font Mono:stype=bold:pixelsize=15;4
-;;font-2 = FontAwesome:pixelsize=15;4
 
-
-modules-left = date workspace-switcher
+modules-left = label
 modules-center = 
-modules-right = cpu-usage battery-indicator
+modules-right =  
+
+tray-position = right
+tray-detached = false
+tray-maxsize = 16
+
+tray-background = ${colors.background}
 
 wm-restack = bspwm
-
-cursor-click = pointer
-cursor-scroll = ns-resize
-
 
 ;         ;
 ; MODULES ;
@@ -165,6 +156,10 @@ label-discharging = "%{B#c5ced9}%{F#181d26} B %{B#181d26}%{F#c5ced9}%{T2}%{T-
 
 label-full = "%{B#c5ced9}%{F#181d26} B %{B#181d26}%{F#c5ced9}%{T2}%{T-} 100 "
 
+[module/label]
+; Just an empty module so I can have a system tray by itself.
+type = custom/text
+content = " "
 
 [settings]
 screenchange-reload = true

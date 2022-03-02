@@ -1,18 +1,24 @@
-#! /bin/sh
+#!/bin/bash
+
+readonly LOG=".config/logs/bspwmrc.log"
+> $LOG
+exec 1>$LOG
+exec 2>&1
+
+# Kill Processes
 
 killall sxhkd
 killall xss-lock
 killall picom
 killall feh
 killall mpd
-
 killall mpd-mpris
 killall mpd-notification
 killall mpd_discord_richpresence
 killall polybar
 killall dunst
 
-[[ -f ~/.Xresources ]] && xrdb ~/.Xresources
+# System Programs
 
 sxhkd &
 xss-lock -l ~/.config/lock/transfer-sleep-lock-generic-delay.sh &
@@ -20,13 +26,21 @@ picom -b --experimental-backends --backend glx &
 feh --bg-fill .config/wallpapers/exoplanet2.jpg &
 mpd &
 {
-	sleep 1
+	sleep 1 
 	mpd-mpris &
 	mpd-notification &
-	aur-git/mpd-rich-presence-discord/release/mpd_discord_richpresence
+	mpd_discord_richpresence
 } &
 polybar -q top &
+polybar -q bottom &
 dunst &
+
+# Applications
+
+pgrep Discord || discord --start-minimized &
+pgrep steam || steam -silent &
+
+# WM Config
 
 bspc monitor -d A B C D E
 
@@ -37,7 +51,7 @@ bspc config border_width        1
 bspc config window_gap          ${WIN_GAP}
 
 bspc config top_padding		-${WIN_GAP}
-bspc config bottom_padding	0
+bspc config bottom_padding	-56
 bspc config left_padding	0
 bspc config right_padding	0
 
