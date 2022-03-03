@@ -36,7 +36,7 @@ i3lock -n -i "$IMAGE" \
 	--{time,date}-font="SauceCodePro Nerd Font" \
 	--time-size=26 --date-size=17 \
 	--time-pos="x+w/2:y+h/2-160" --date-pos="tx:ty-40" \
-	--pass-{media,power}
+	--pass-media-keys
 #	--no-verify
 
 fi
