@@ -58,9 +58,13 @@ if [[ ${#INFO[@]} -gt 1 ]]; then
 fi
 
 CURRENT_SONG=$(mpc current -f "%artist% - %title%")
+CURRENT_STATE=$(mpc status "%state%")
+CURRENT_POS=$(mpc playlist | grep -n -m1 $(mpc current) | sed 's/\([0-9]*\).*/\1/')
+QUEUE_LENGTH=$(mpc playlist | grep -c "^")
+
 
 if [[ ${#CURRENT_SONG} -gt 0 ]]; then
-	echo -e "\0message\x1fCurrent: $CURRENT_SONG"
+	echo -e "\0message\x1fCurrent: ($CURRENT_STATE) $CURRENT_SONG ($CURRENT_POS/$QUEUE_LENGTH)"
 fi
 
 case ${INFO[0]} in
@@ -91,7 +95,7 @@ case ${INFO[0]} in
 		message "Song: ${INFO[2]} - ${INFO[4]}"
 		item ".."			queue
 		item "Remove From Queue"	queue	"mpc del ${INFO[5]}"
-		item "Play Now"			queue	"mpc move ${INFO[5]} 1"
+		item "Play Now"			queue	"mpc play ${INFO[5]}"
 		item "View In Library"		queue_song 	
 		;;
 	"artist_list")
