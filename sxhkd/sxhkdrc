@@ -66,10 +66,6 @@ super + alt + shift + v
 super + alt + b
 	rofi -show bluetooth -modi "bluetooth:.config/rofi/scripts/bluetooth.sh"
 
-# Wifi
-super + alt + n
-	rofi -show network -modi "network:.config/rofi/scripts/wifi.sh"
-
 # Weather
 super + alt + w
 	alacritty --hold --title=wttr.in --option font.size=8 -e curl -fs "wttr.in"
